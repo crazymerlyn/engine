@@ -6,9 +6,32 @@ use node::{Node, NodeType, ElementData};
 pub type PropertyMap = HashMap<String, Value>;
 
 pub struct StyledNode<'a> {
-    node: &'a Node,
-    specified_values: PropertyMap,
-    children: Vec<StyledNode<'a>>,
+    pub node: &'a Node,
+    pub specified_values: PropertyMap,
+    pub children: Vec<StyledNode<'a>>,
+}
+
+pub enum Display {
+    Inline,
+    Block,
+    None,
+}
+
+impl<'a> StyledNode<'a> {
+    pub fn value(&self, name: &str) -> Option<Value> {
+        self.specified_values.get(name).cloned()
+    }
+
+    pub fn display(&self) -> Display {
+        match self.value("display") {
+            Some(Value::Keyword(s)) => match s.as_ref() {
+                "block" => Display::Block,
+                "none" => Display::None,
+                _ => Display::Inline,
+            },
+            _ => Display::Inline,
+        }
+    }
 }
 
 fn specified_values(elem: &ElementData, stylesheet: &Stylesheet) -> PropertyMap {
