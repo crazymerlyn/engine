@@ -92,7 +92,7 @@ fn matches_simple_selector(elem: &ElementData, selector: &SimpleSelector) -> boo
         return false;
     }
 
-    return true;
+    true
 }
 
 

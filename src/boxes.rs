@@ -73,6 +73,6 @@ pub fn build_layout_tree<'a>(styled_node: &'a StyledNode<'a>) -> LayoutBox<'a> {
             Display::None => {} // Skip nodes with display none
         }
     }
-    return root;
+    root
 }
 

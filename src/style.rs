@@ -44,7 +44,7 @@ fn specified_values(elem: &ElementData, stylesheet: &Stylesheet) -> PropertyMap 
             values.insert(declaration.name.clone(), declaration.value.clone());
         }
     }
-    return values;
+    values
 }
 
 pub fn style_tree<'a>(root: &'a Node, stylesheet: &'a Stylesheet) -> StyledNode<'a> {

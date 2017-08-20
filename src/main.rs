@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 mod node;
 mod parser;
 mod css;

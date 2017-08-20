@@ -80,7 +80,7 @@ impl Parser {
     }
 
     fn parse_declarations(&mut self) -> Vec<css::Declaration> {
-        assert!(self.consume_char() == '{');
+        assert_eq!(self.consume_char(), '{');
         let mut declarations = vec![];
         loop {
             self.consume_whitespace();
@@ -96,11 +96,11 @@ impl Parser {
     fn parse_declaration(&mut self) -> css::Declaration {
         let property_name = self.parse_identifier();
         self.consume_whitespace();
-        assert!(self.consume_char() == ':');
+        assert_eq!(self.consume_char(), ':');
         self.consume_whitespace();
         let value = self.parse_value();
         self.consume_whitespace();
-        assert!(self.consume_char() == ';');
+        assert_eq!(self.consume_char(), ';');
 
         css::Declaration {
             name: property_name,
@@ -133,7 +133,7 @@ impl Parser {
     }
 
     fn parse_color(&mut self) -> css::Value {
-        assert!(self.consume_char() == '#');
+        assert_eq!(self.consume_char(), '#');
         css::Value::Color(css::Color {
             r: self.parse_hex_pair(),
             g: self.parse_hex_pair(),
@@ -160,34 +160,34 @@ impl Parser {
     }
 
     fn parse_element(&mut self) -> Node {
-        assert!(self.consume_char() == '<');
+        assert_eq!(self.consume_char(), '<');
         let tag_name = self.parse_tag_name();
         let attrs = self.parse_attrs();
-        assert!(self.consume_char() == '>');
+        assert_eq!(self.consume_char(), '>');
         
         let children = self.parse_nodes();
 
-        assert!(self.consume_char() == '<');
-        assert!(self.consume_char() == '/');
-        assert!(self.parse_tag_name() == tag_name);
-        assert!(self.consume_char() == '>');
+        assert_eq!(self.consume_char(), '<');
+        assert_eq!(self.consume_char(), '/');
+        assert_eq!(self.parse_tag_name(), tag_name);
+        assert_eq!(self.consume_char(), '>');
 
-        return node::elem(tag_name, attrs, children);
+        node::elem(tag_name, attrs, children)
     }
 
     fn parse_attr(&mut self) -> (String, String) {
         let name = self.parse_tag_name();
-        assert!(self.consume_char() == '=');
+        assert_eq!(self.consume_char(), '=');
         let value = self.parse_attr_value();
-        return (name, value);
+        (name, value)
     }
 
     fn parse_attr_value(&mut self) -> String {
         let open_quote = self.consume_char();
         assert!(open_quote == '"' || open_quote == '\'');
         let value = self.consume_while(|c| c != open_quote);
-        assert!(self.consume_char() == open_quote);
-        return value;
+        assert_eq!(self.consume_char(), open_quote);
+        value
     }
 
     fn parse_attrs(&mut self) -> node::AttrMap {
@@ -200,7 +200,7 @@ impl Parser {
             let (name, value) = self.parse_attr();
             attrs.insert(name, value);
         }
-        return attrs;
+        attrs
     }
 
     fn parse_nodes(&mut self) -> Vec<Node> {
@@ -212,7 +212,7 @@ impl Parser {
             }
             nodes.push(self.parse_node());
         }
-        return nodes;
+        nodes
     }
 
     fn parse_text(&mut self) -> Node {
@@ -232,7 +232,7 @@ impl Parser {
         let (_, cur_char) = iter.next().unwrap();
         let (next_pos, _) = iter.next().unwrap_or((1, ' '));
         self.pos += next_pos;
-        return cur_char;
+        cur_char
     }
 
     fn consume_while<F>(&mut self, test: F) -> String 
