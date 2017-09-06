@@ -32,6 +32,10 @@ impl<'a> StyledNode<'a> {
             _ => Display::Inline,
         }
     }
+
+    pub fn lookup(&self, name: &str, fallback_name: &str, default: &Value) -> Value {
+        self.value(name).or(self.value(fallback_name)).unwrap_or(default.clone())
+    }
 }
 
 fn specified_values(elem: &ElementData, stylesheet: &Stylesheet) -> PropertyMap {
